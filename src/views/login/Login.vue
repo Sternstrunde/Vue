@@ -5,6 +5,7 @@
 </template>
 
 <script setup lang="ts">
+import { MessageBox } from '@element-plus/icons-vue'
 import loginPanel from './c-pns/login-panel.vue'
 </script>
 

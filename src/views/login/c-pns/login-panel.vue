@@ -1,19 +1,74 @@
 <template>
   <div class="login-panel">
+    <!-- 顶部的标题-->
     <h1 class="title">后台管理系统</h1>
-    <div class="tabs">tabs</div>
+
+    <!-- 中间tabs切换-->
+    <div class="tabs">
+      <el-tabs type="border-card" stretch v-model="activeName">
+        <!--1.账号登录的Pane-->
+        <el-tab-pane name="account">
+          <template #label>
+            <div class="label">
+              <el-icon><UserFilled /></el-icon>
+              <span class="text">账号登录</span>
+            </div>
+          </template>
+          <div>
+            <PanelAccount ref="accountRef" />
+          </div>
+        </el-tab-pane>
+        <!--2.手机登录的Pane-->
+        <el-tab-pane name="phone">
+          <template #label>
+            <div class="label">
+              <el-icon><Cellphone /></el-icon>
+              <span class="text">手机登录</span>
+            </div>
+          </template>
+          <div>
+            <PanelPhone></PanelPhone>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
+
+    <!-- 底部区域-->
     <div class="control-account">
       <el-checkbox v-model="isRemPwd" label="记住密码" size="large" />
       <el-link type="primary">忘记密码</el-link>
     </div>
-    <el-button class="login-btn" type="primary" size="large">Primary</el-button>
+    <el-button
+      class="login-btn"
+      type="primary"
+      size="large"
+      @click="handleLoginBtnClick"
+    >
+      立即登录
+    </el-button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import PanelAccount from './panel-account.vue'
+import PanelPhone from './panel-phone.vue'
 
 const isRemPwd = ref(false)
+const activeName = ref('account')
+const accountRef = ref<InstanceType<typeof PanelAccount>>()
+
+function handleLoginBtnClick() {
+  if (activeName.value === 'account') {
+    // console.log('用户在进行账号登录')
+    // 1. 获取子组件的实例
+
+    accountRef.value?.loginAction()
+    // 2.调用方法
+  } else {
+    console.log('用户在进行手机登录')
+  }
+}
 </script>
 
 <style scoped lang="less">
@@ -25,7 +80,7 @@ const isRemPwd = ref(false)
     text-align: center;
     margin-bottom: 15px;
   }
-  .icon {
+  .label {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -45,6 +100,8 @@ const isRemPwd = ref(false)
   .login-btn {
     margin-top: 10px;
     width: 100%;
+
+    --el-button-size: 40px;
   }
 }
 </style>
