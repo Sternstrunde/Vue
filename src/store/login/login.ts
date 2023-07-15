@@ -1,10 +1,11 @@
 import { defineStore } from 'pinia'
 import { accountLoginRequest } from '@/service/login/login'
+import { localCache } from '@/utils/cache'
 
 const useLoginStore = defineStore('login', {
   state: () => ({
     id: '',
-    token: '',
+    token: localCache.getCache('token') ?? '',
     name: ''
   }),
   actions: {
@@ -14,6 +15,11 @@ const useLoginStore = defineStore('login', {
       this.id = loignResult.data.id
       this.token = loignResult.data.token
       this.name = loignResult.data.name
+
+      //
+      // localStorage.setItem('token', this.token)
+      // localStorage.setItem('userInfo', JSON.stringify({}))
+      localCache.setCache('token', this.token)
     }
   }
 })
