@@ -20,7 +20,7 @@
         <el-input v-model="ruleForm.name" />
       </el-form-item>
       <el-form-item label="密码" prop="password">
-        <el-input v-model="ruleForm.password" />
+        <el-input v-model="ruleForm.password" type="password" show-password />
       </el-form-item>
     </el-form>
   </div>
@@ -31,6 +31,7 @@ import { reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import useLoginStore from '@/store/login/login.ts'
+import { localCache } from '@/utils/cache'
 
 interface RuleForm {
   name: string
@@ -40,8 +41,8 @@ interface RuleForm {
 const formSize = ref('default')
 const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive<RuleForm>({
-  name: '',
-  password: ''
+  name: localCache.getCache('name') ?? '',
+  password: localCache.getCache('password') ?? ''
 })
 
 const rules = reactive<FormRules<RuleForm>>({
@@ -61,14 +62,24 @@ const rules = reactive<FormRules<RuleForm>>({
 
 const loginStore = useLoginStore()
 // 3. 执行帐号的登录逻辑
-function loginAction() {
+function loginAction(isRemPwd: boolean) {
   // console.log('111111', ruleForm.name, ruleForm.password)
+  console.log(isRemPwd)
+
   ruleFormRef.value?.validate((valid) => {
     if (valid) {
       const name = ruleForm.name
       const password = ruleForm.password
 
-      loginStore.loginAccountAction({ name, password })
+      loginStore.loginAccountAction({ name, password }).then((res) => {
+        if (isRemPwd) {
+          localCache.setCache('name', name)
+          localCache.setCache('password', password)
+        } else {
+          localCache.removeCache('name')
+          localCache.removeCache('password')
+        }
+      })
     } else {
       ElMessage.error('验证失败')
     }

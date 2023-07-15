@@ -1,15 +1,16 @@
 <template>
   <div class="main">
-    <h2>main:{{ counterStore.counter }}-{{ counterStore.doubleCounter }}</h2>
-    <button @click="changeCounter">修改Counter</button>
+    <button @click="handleExitClick">退出登录</button>
   </div>
 </template>
 
 <script setup lang="ts">
-import useCounterStore from '@/store/counter'
-const counterStore = useCounterStore()
-function changeCounter() {
-  counterStore.changeCounterAction(220)
+import router from '@/router'
+import { localCache } from '@/utils/cache'
+
+function handleExitClick() {
+  localCache.removeCache('token')
+  router.push('/login')
 }
 </script>
 

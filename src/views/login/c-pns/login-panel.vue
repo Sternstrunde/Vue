@@ -50,11 +50,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import PanelAccount from './panel-account.vue'
 import PanelPhone from './panel-phone.vue'
+import { localCache } from '@/utils/cache'
 
-const isRemPwd = ref(false)
+const isRemPwd = ref<boolean>(localCache.getCache('isRemPwd') ?? false)
+watch(isRemPwd, (newValue) => {
+  localCache.setCache('isRemPwd', newValue)
+})
 const activeName = ref('account')
 const accountRef = ref<InstanceType<typeof PanelAccount>>()
 
@@ -62,8 +66,11 @@ function handleLoginBtnClick() {
   if (activeName.value === 'account') {
     // console.log('用户在进行账号登录')
     // 1. 获取子组件的实例
+    // console.log(isRemPwd.value)
 
-    accountRef.value?.loginAction()
+    accountRef.value?.loginAction(isRemPwd.value)
+    if (isRemPwd.value) {
+    }
     // 2.调用方法
   } else {
     console.log('用户在进行手机登录')
