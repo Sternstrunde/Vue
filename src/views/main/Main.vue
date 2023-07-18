@@ -18,13 +18,6 @@
 import { ref } from 'vue'
 import MainMenu from '@/components/main-menu/main-menu.vue'
 import MainHeader from '@/components/main-header/main-header.vue'
-// import router from '@/router'
-// import { localCache } from '@/utils/cache'
-
-// function handleExitClick() {
-//   localCache.removeCache('token')
-//   router.push('/login')
-// }
 
 const isCollapse = ref(false)
 function handleChange(isFold: boolean) {
