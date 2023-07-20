@@ -2,7 +2,10 @@ import { defineStore } from 'pinia'
 import { accountLoginRequest, getUserInfoById } from '@/service/login/login'
 import { localCache } from '@/utils/cache'
 import router from '@/router'
+import { mapMenusToRoutes } from '@/utils/map-menus'
 import { ElMessage } from 'element-plus'
+import type { RouteRecordRaw } from 'vue-router'
+import user from '@/router/main/system/user/user'
 
 interface IloginState {
   token: string
@@ -12,9 +15,9 @@ interface IloginState {
 
 const useLoginStore = defineStore('login', {
   state: (): IloginState => ({
-    token: localCache.getCache('token') ?? '',
-    userInfo: localCache.getCache('userInfo') ?? '',
-    userMenus: localCache.getCache('userMenus') ?? ''
+    token: '',
+    userInfo: {},
+    userMenus: []
   }),
   actions: {
     async loginAccountAction(account: any) {
@@ -74,6 +77,19 @@ const useLoginStore = defineStore('login', {
         router.push('/main')
       } else {
         ElMessage.error('Oops,login failure.')
+      }
+    },
+    loadLocalCacheAction() {
+      const token = localCache.getCache('token')
+      const userInfo = localCache.getCache('userInfo')
+      const userMenus = localCache.getCache('userMenus')
+      if (token && userInfo && userMenus) {
+        this.token = token
+        this.userInfo = userInfo
+        this.userMenus = userMenus
+
+        const routes = mapMenusToRoutes(this.userMenus)
+        routes.forEach((route) => router.addRoute('main', route))
       }
     }
   }

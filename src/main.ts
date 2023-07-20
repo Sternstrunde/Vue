@@ -4,7 +4,7 @@ import './assets/css/index.less'
 
 import App from './App.vue'
 import router from './router/index'
-import pinia from './store'
+import registerStore from './store'
 import registerIcons from './global/register-icons'
 
 // 0 针对ELMessage和ElLoading 等组件引入样式
@@ -46,7 +46,8 @@ import registerIcons from './global/register-icons'
 const app = createApp(App)
 
 app.use(registerIcons)
+
 app.use(router)
-app.use(pinia)
+app.use(registerStore)
 
 app.mount('#app')

@@ -2,13 +2,15 @@
   <div class="main">
     <el-container class="main-content">
       <el-aside :width="isCollapse ? '60px' : '210px'">
-        <MainMenu :is-Fold="isCollapse" />
+        <main-menu :is-Fold="isCollapse" />
       </el-aside>
       <el-container>
         <el-header height="50px">
-          <MainHeader @foldchange="handleChange" />
+          <main-header @foldchange="handleChange" />
         </el-header>
-        <el-main>Main</el-main>
+        <el-main>
+          <router-view></router-view>
+        </el-main>
       </el-container>
     </el-container>
   </div>

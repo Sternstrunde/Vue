@@ -17,18 +17,18 @@
             <el-icon><Monitor /></el-icon>
             <span>系统总览</span>
           </template>
-          <el-menu-item index="1-1">核心技术</el-menu-item>
-          <el-menu-item index="1-2">商品统计</el-menu-item>
+          <el-menu-item index="1-1" @click="handleItemClick('/main/analysis/overview')">核心技术</el-menu-item>
+          <el-menu-item index="1-2" @click="handleItemClick('/main/analysis/dashboard')">商品统计</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
             <el-icon><Setting /></el-icon>
             <span>系统管理</span>
           </template>
-          <el-menu-item index="2-1">用户管理</el-menu-item>
+          <el-menu-item index="2-1" @click="handleItemClick('/main/system/user')">用户管理</el-menu-item>
           <el-menu-item index="2-2">部门管理</el-menu-item>
           <el-menu-item index="2-3">菜单管理</el-menu-item>
-          <el-menu-item index="2-4">角色管理</el-menu-item>
+          <el-menu-item index="2-4" @click="handleItemClick('/main/system/role')">角色管理</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="3">
           <template #title>
@@ -57,7 +57,7 @@
               <span>{{ item.name }}</span>
             </template>
             <template v-for="subitem in item.children" :key="subitem.id">
-              <el-menu-item :index="subitem.id + ''">{{
+              <el-menu-item :index="subitem.id + ''" @click=handleItemClick(subitem)>{{
                 subitem.name
               }}</el-menu-item>
             </template>
@@ -69,6 +69,7 @@
 </template>
 
 <script setup lang="ts">
+import router from '@/router';
 import useLoginStore from '@/store/login/login'
 
 // 定义props
@@ -82,6 +83,11 @@ defineProps({
 // 获取动态的菜单
 const loginStore = useLoginStore()
 const userMenus = loginStore.userMenus
+
+const handleItemClick = function(address:string){
+  const url = address
+  router.push(url)
+}
 </script>
 
 <style scoped lang="less">
