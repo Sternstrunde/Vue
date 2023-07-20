@@ -1,3 +1,4 @@
+import { firstMenu } from '@/utils/map-menus'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const router = createRouter({
@@ -55,6 +56,10 @@ const router = createRouter({
 router.beforeEach((to, from) => {
   const token = localStorage.getItem('token')
   if (to.path.startsWith('/main') && !token) return '/login'
+
+  if (to.path === '/main') {
+    return firstMenu?.url
+  }
 })
 
 export default router

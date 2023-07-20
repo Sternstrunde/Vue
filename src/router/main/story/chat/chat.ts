@@ -1,4 +1,4 @@
 export default {
-  path:'/mian/story/chat',
-  component:()=> import('@/views/main/story/chat/chat.vue')
+  path: '/main/story/chat',
+  component: () => import('@/views/main/story/chat/chat.vue')
 }

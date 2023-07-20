@@ -6,29 +6,62 @@
     </div>
     <div class="menu">
       <el-menu
-        default-active="2-1"
+        :default-active="activePath"
         active-text-color="#fff"
         :collapse="isFold"
         text-color="#b7bdc3"
         background-color="#001529"
       >
-        <el-sub-menu index="1">
+        <template v-for="item in userMenus" :key="item.id">
+          <el-sub-menu :index="item.id + ''">
+            <template #title>
+              <el-icon>
+                <component :is="item.icon.split('-icon-')[1]" />
+              </el-icon>
+              <span>{{ item.name }}</span>
+            </template>
+            <template v-for="subitem in item.children" :key="subitem.id">
+              <el-menu-item
+                :index="subitem.id + ''"
+                @click="handleItemClick(subitem)"
+                >{{ subitem.name }}</el-menu-item
+              >
+            </template>
+          </el-sub-menu>
+        </template>
+        <!-- <el-sub-menu index="1">
           <template #title>
             <el-icon><Monitor /></el-icon>
             <span>系统总览</span>
           </template>
-          <el-menu-item index="1-1" @click="handleItemClick('/main/analysis/overview')">核心技术</el-menu-item>
-          <el-menu-item index="1-2" @click="handleItemClick('/main/analysis/dashboard')">商品统计</el-menu-item>
+          <el-menu-item
+            index="1-1"
+            @click="handleItemClick('/main/analysis/overview')"
+            >核心技术</el-menu-item
+          >
+          <el-menu-item
+            index="1-2"
+            @click="handleItemClick('/main/analysis/dashboard')"
+            >商品统计</el-menu-item
+          >
         </el-sub-menu>
         <el-sub-menu index="2">
           <template #title>
             <el-icon><Setting /></el-icon>
             <span>系统管理</span>
           </template>
-          <el-menu-item index="2-1" @click="handleItemClick('/main/system/user')">用户管理</el-menu-item>
+          <el-menu-item
+            index="2-1"
+            @click="handleItemClick('/main/system/user')"
+            >用户管理</el-menu-item
+          >
           <el-menu-item index="2-2">部门管理</el-menu-item>
           <el-menu-item index="2-3">菜单管理</el-menu-item>
-          <el-menu-item index="2-4" @click="handleItemClick('/main/system/role')">角色管理</el-menu-item>
+          <el-menu-item
+            index="2-4"
+            @click="handleItemClick('/main/system/role')"
+            >角色管理</el-menu-item
+          >
         </el-sub-menu>
         <el-sub-menu index="3">
           <template #title>
@@ -45,32 +78,18 @@
           </template>
           <el-menu-item index="4-1">你的故事</el-menu-item>
           <el-menu-item index="4-2">故事列表</el-menu-item>
-        </el-sub-menu>
+        </el-sub-menu> -->
         <!-- 遍历整个菜单-->
-        <!-- <template v-for="item in userMenus" :key="item.id">
-          <el-sub-menu :index="item.id + ''">
-            <template #title>
-              // 动态组件使用component
-              <el-icon>
-                <component :is="item.icon.split('-icon-')[1]"/>
-              </el-icon>
-              <span>{{ item.name }}</span>
-            </template>
-            <template v-for="subitem in item.children" :key="subitem.id">
-              <el-menu-item :index="subitem.id + ''" @click=handleItemClick(subitem)>{{
-                subitem.name
-              }}</el-menu-item>
-            </template>
-          </el-sub-menu>
-        </template> -->
       </el-menu>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import router from '@/router';
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import useLoginStore from '@/store/login/login'
+import { firstMenu, mapPathToMenu } from '@/utils/map-menus'
 
 // 定义props
 defineProps({
@@ -84,9 +103,17 @@ defineProps({
 const loginStore = useLoginStore()
 const userMenus = loginStore.userMenus
 
-const handleItemClick = function(address:string){
-  const url = address
-  router.push(url)
+const route = useRouter()
+const routers = route.currentRoute.value.fullPath
+
+let activePath = computed(() => {
+  const pathMenu = mapPathToMenu(routers, userMenus)
+  return pathMenu.id + ''
+})
+
+const router = useRouter()
+const handleItemClick = function (address: any) {
+  router.push(address.url)
 }
 </script>
 

@@ -59,6 +59,52 @@ const useLoginStore = defineStore('login', {
           }
         }
 
+        const userMenus = [
+          {
+            name: '系统总览',
+            id: 1,
+            icon: 'main-icon-Monitor',
+            url: '/main/analysis',
+            children: [
+              { name: '核心技术', url: '/main/analysis/overview', id: 11 },
+              { name: '商品统计', url: '/main/analysis/dashboard', id: 12 }
+            ]
+          },
+          {
+            name: '系统管理',
+            id: 4,
+            icon: 'main-icon-Setting',
+            url: '/main/system',
+            children: [
+              { name: '用户管理', url: '/main/system/user', id: 41 },
+              { name: '部门管理', url: '/main/system/department', id: 42 },
+              { name: '菜单管理', url: '/main/system/menu', id: 43 },
+              { name: '角色管理', url: '/main/system/role', id: 44 }
+            ]
+          },
+          {
+            name: '商品中心',
+            id: 2,
+            icon: 'main-icon-ShoppingBag',
+            url: '/main/product',
+            children: [
+              { name: '商品类型', url: '/main/product/category', id: 21 },
+              { name: '商品信息', url: '/main/product/goods', id: 22 }
+            ]
+          },
+          {
+            name: '随便聊聊',
+            id: 3,
+            icon: 'main-icon-Shop',
+            url: '/main/story',
+            children: [
+              { name: '你的故事', url: '/main/story/chat', id: 31 },
+              { name: '故事列表', url: '/main/story/list', id: 32 }
+            ]
+          }
+        ]
+
+        this.userMenus = userMenus
         // 获取登录用户的详细信息(role信息)
         // const userInforResult = await getUserInfoById(id)
         // this.userInfo = userInforResult.data
@@ -70,9 +116,11 @@ const useLoginStore = defineStore('login', {
         // console.log(userInforResult)
         this.userInfo = user
 
-        localCache.setCache('userInfo', user)
-        localCache.setCache('userMenus', 'userMenus')
-        console.log(this.userInfo)
+        localCache.setCache('userInfo', this.userInfo)
+        localCache.setCache('userMenus', this.userMenus)
+        // console.log(this.userMenus)
+
+        mapMenusToRoutes(this.userMenus)
 
         router.push('/main')
       } else {
@@ -87,8 +135,7 @@ const useLoginStore = defineStore('login', {
         this.token = token
         this.userInfo = userInfo
         this.userMenus = userMenus
-
-        const routes = mapMenusToRoutes(this.userMenus)
+        const routes = mapMenusToRoutes(userMenus)
         routes.forEach((route) => router.addRoute('main', route))
       }
     }

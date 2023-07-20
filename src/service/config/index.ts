@@ -16,7 +16,7 @@ if (import.meta.env.MODE === 'production') {
   BASE_URL = 'http://152.136.185.210:5000'
 }
 
-console.log(BASE_URL)
+// console.log(BASE_URL)
 
 // 3.通过创建dotenv 文件直接创建变量
 // console.log(import.meta.env.VITE_URL)

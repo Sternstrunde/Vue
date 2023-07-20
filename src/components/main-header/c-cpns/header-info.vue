@@ -48,6 +48,8 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 function handleExitClick() {
   localCache.removeCache('token')
+  localCache.removeCache('userInfo')
+  localCache.removeCache('userMenus')
   router.push('/login')
 }
 </script>

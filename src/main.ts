@@ -46,8 +46,7 @@ import registerIcons from './global/register-icons'
 const app = createApp(App)
 
 app.use(registerIcons)
-
-app.use(router)
 app.use(registerStore)
+app.use(router)
 
 app.mount('#app')
