@@ -58,6 +58,7 @@ router.beforeEach((to, from) => {
   if (to.path.startsWith('/main') && !token) return '/login'
 
   if (to.path === '/main') {
+    console.log(firstMenu)
     return firstMenu?.url
   }
 })

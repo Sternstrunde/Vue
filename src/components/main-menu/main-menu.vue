@@ -107,7 +107,7 @@ const route = useRouter()
 const routers = route.currentRoute.value.fullPath
 
 let activePath = computed(() => {
-  const pathMenu = mapPathToMenu(routers, userMenus)
+  const pathMenu = mapPathToMenu(route.currentRoute.value.fullPath, userMenus)
   return pathMenu.id + ''
 })
 

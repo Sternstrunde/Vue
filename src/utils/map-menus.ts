@@ -14,10 +14,9 @@ function loadLocalRoutes() {
   const localRoutes: RouteRecordRaw[] = []
 
   // 1.读取router/main/所有ts文件
-  const files: Record<string, any> = import.meta.glob(
-    '../router/main/**/*.ts',
-    { eager: true }
-  )
+  const files: Record<string, any> = import.meta.glob('../router/**/*.ts', {
+    eager: true
+  })
 
   for (const key in files) {
     const module = files[key].default
@@ -30,20 +29,19 @@ function loadLocalRoutes() {
 export let firstMenu: any = null
 export function mapMenusToRoutes(userMenus: any[]) {
   const localRoutes = loadLocalRoutes()
-
   const routes: RouteRecordRaw[] = []
-
   for (const menu of userMenus) {
     for (const submenu of menu.children) {
       const menuUrl = submenu.url
-      const route = localRoutes.find((item) => item.path === menuUrl)
+      const route = localRoutes.find((item) => item.path == menuUrl)
       if (route) {
-        if (!routes.find((item) => item.path === menu.url)) {
+        if (!routes.find((item) => item.path == menu.url)) {
           routes.push({ path: menu.url, redirect: route.path })
         }
         routes.push(route)
       }
       if (!firstMenu && route) firstMenu = submenu
+      console.log(firstMenu)
     }
   }
 
@@ -70,8 +68,10 @@ export function mapPathToMenu(path: string, userMenus: any[]) {
 }
 
 export function mapPathToBreadcrumb(path: string, userMenus: any[]) {
+  // 定义面包屑
   const breadcrumb: any[] = []
 
+  // 遍历获取面包屑层级
   for (const menu of userMenus) {
     for (const submenu of menu.children) {
       if (submenu.url === path) {
