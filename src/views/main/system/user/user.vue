@@ -1,16 +1,13 @@
 <template>
   <div class="user">
     <UserSearch />
-    <div class="content">
-      <div class="header"></div>
-      <div class="table"></div>
-      <div class="pagination"></div>
-    </div>
+    <UserContent />
   </div>
 </template>
 
 <script setup lang="ts">
 import UserSearch from './c-cpns/user-search.vue'
+import UserContent from './c-cpns/user-content.vue'
 </script>
 
 <style scoped>
