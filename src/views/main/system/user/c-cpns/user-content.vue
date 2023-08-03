@@ -49,10 +49,14 @@
         </el-table-column>
         <el-table-column align="center" prop="createAt" label="创建时间">
           <template #default="scope">
-            {{ formatUTC(scope.row.createAt, 'YYYY-MM-DD HH:mm:ss') }}
+            {{ formatUTC(scope.row.createAt) }}
           </template>
         </el-table-column>
-        <el-table-column align="center" prop="updateAt" label="更新时间" />
+        <el-table-column align="center" prop="updateAt" label="更新时间">
+          <template #default="scope">
+            {{ formatUTC(scope.row.updateAt) }}
+          </template>
+        </el-table-column>
 
         <el-table-column label="操作" width="160px">
           <el-button type="primary" icon="Edit" size="small" text>
@@ -64,11 +68,22 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="pagination"></div>
+    <div class="pagination">
+      <el-pagination
+        v-model:current-page="currentPage"
+        v-model:page-size="pageSize"
+        :page-sizes="[5, 10, 20, 50]"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="usersTotalCount"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import userSystemStore from '@/store/main/system/system'
 import { formatUTC } from '@/utils/fotamt'
@@ -77,8 +92,18 @@ const systemStore = userSystemStore()
 
 systemStore.postUsersListAction()
 
-const { usersList } = storeToRefs(systemStore)
+const { usersList, usersTotalCount } = storeToRefs(systemStore)
 console.log(usersList)
+
+// 页码相关的逻辑
+const currentPage = ref(1)
+const pageSize = ref(10)
+function handleSizeChange() {
+  console.log('page-size change', pageSize.value)
+}
+function handleCurrentChange() {
+  console.log('page-size change', currentPage.value)
+}
 </script>
 
 <style scoped>
@@ -102,5 +127,11 @@ console.log(usersList)
     margin-left: 0;
     padding: 5px 8px;
   }
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
 }
 </style>

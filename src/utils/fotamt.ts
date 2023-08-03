@@ -7,6 +7,6 @@ export function formatUTC(
   utcString: string,
   format: string = 'YYYY-MM-DD HH:mm:ss'
 ) {
-  const resultTime = dayjs.utc(utcString).format(format)
+  const resultTime = dayjs.utc(utcString).utcOffset(8).format(format)
   return resultTime
 }
