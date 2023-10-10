@@ -1,8 +1,8 @@
 <template>
   <div class="content">
     <div class="header">
-      <h3 class="title">用户列表</h3>
-      <el-button type="primary" @click="handleNewUserClick">新建用户</el-button>
+      <h3 class="title">部门列表</h3>
+      <el-button type="primary" @click="handleNewUserClick">新建部门</el-button>
     </div>
     <div class="table">
       <!-- <ul>
@@ -10,7 +10,7 @@
           {{ item.name }}
         </li>
       </ul> -->
-      <el-table :data="usersList" border style="width: 100%">
+      <el-table :data="pageList" border style="width: 100%">
         <el-table-column align="center" type="selection" width="50px" />
         <el-table-column
           align="center"
@@ -21,19 +21,19 @@
         <el-table-column
           align="center"
           prop="name"
-          label="用户名"
+          label="部门名称"
           width="120px"
         />
         <el-table-column
           align="center"
-          prop="realname"
-          label="真实姓名"
+          prop="leader"
+          label="部门领导"
           width="120px"
         />
         <el-table-column
           align="center"
-          prop="cellphone"
-          label="手机号码"
+          prop="parentId"
+          label="上级部门"
           width="150px"
         />
         <el-table-column align="center" prop="enable" label="状态" width="80px">
@@ -76,7 +76,7 @@
         v-model:page-size="pageSize"
         :page-sizes="[5, 10, 20, 50]"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="usersTotalCount"
+        :total="pageTotalCount"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
@@ -89,6 +89,7 @@ import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import userSystemStore from '@/store/main/system/system'
 import { formatUTC } from '@/utils/fotamt'
+import { postPageListData } from '../../../../../service/main/system/system';
 
 
 // 定义事件
@@ -98,24 +99,24 @@ const emit = defineEmits(['newClick','editClick'])
 const systemStore = userSystemStore()
 const currentPage = ref(1)
 const pageSize = ref(10)
-fetchUserListData()
+fetchPageListData()
 
 // 获取userlist数据，进行展示
-const { usersList, usersTotalCount } = storeToRefs(systemStore)
-console.log(usersList)
+const { pageList, pageTotalCount } = storeToRefs(systemStore)
+console.log(pageList)
 
 // 页码相关的逻辑
 
 function handleSizeChange() {
-  fetchUserListData()
+  fetchPageListData()
   console.log('page-size change', pageSize.value)
 }
 function handleCurrentChange() {
-  fetchUserListData()
+  fetchPageListData()
   console.log('page-size change', currentPage.value)
 }
 // 用于发送网络请求
-function fetchUserListData(formData: any = {}) {
+function fetchPageListData(formData: any = {}) {
   const size = pageSize.value
   const offest = (currentPage.value - 1) * size
 
@@ -124,15 +125,15 @@ function fetchUserListData(formData: any = {}) {
   const queryInro = {...info,...formData}
   console.log(queryInro)
 
-  systemStore.postUsersListAction(info)
+  systemStore.postPageListAction('department',queryInro)
 }
 
-defineExpose({ fetchUserListData, handleNewUserClick })
+defineExpose({ fetchPageListData, handleNewUserClick })
 
 // 删除
 function handleDeleteBtnClick(id:number){
   console.log(id)
-  systemStore.deleteUserByIdAction(id)
+  systemStore.deletePageByIdAction('department',id)
 }
 
 

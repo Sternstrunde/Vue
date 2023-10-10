@@ -6,6 +6,7 @@ import { mapMenusToRoutes } from '@/utils/map-menus'
 import { ElMessage } from 'element-plus'
 import type { RouteRecordRaw } from 'vue-router'
 import user from '@/router/main/system/user/user'
+import userMainStore from '../main/main'
 
 interface IloginState {
   token: string
@@ -120,6 +121,12 @@ const useLoginStore = defineStore('login', {
         localCache.setCache('userMenus', this.userMenus)
         // console.log(this.userMenus)
 
+        // 请求所有roles/department
+        // const mainStore = userMainStore()
+        // mainStore.fetchEntireDataAction()
+
+
+
         mapMenusToRoutes(this.userMenus)
 
         router.push('/main')
@@ -136,7 +143,14 @@ const useLoginStore = defineStore('login', {
         this.userInfo = userInfo
         this.userMenus = userMenus
         const routes = mapMenusToRoutes(userMenus)
+
+        // 请求所有的roles/department数据
+
+
         routes.forEach((route) => router.addRoute('main', route))
+
+
+
       }
     }
   }

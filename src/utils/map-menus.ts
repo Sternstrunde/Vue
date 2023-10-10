@@ -41,7 +41,7 @@ export function mapMenusToRoutes(userMenus: any[]) {
         routes.push(route)
       }
       if (!firstMenu && route) firstMenu = submenu
-      console.log(firstMenu)
+      // console.log(firstMenu)
     }
   }
 

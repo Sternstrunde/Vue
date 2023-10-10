@@ -1,5 +1,6 @@
-import { pustUserListData } from '@/service/main/system/system'
+import { deletePageById, deleteUserById, editPageData, newPageData, postPageListData, pustUserListData } from '@/service/main/system/system'
 import { defineStore } from 'pinia'
+import {newUserData, editUserData } from '@/service/main/mian'
 
 import type { ISystemState } from './type'
 
@@ -136,13 +137,60 @@ let userList = {
 const userSystemStore = defineStore('system', {
   state: (): ISystemState => ({
     usersList: [],
-    usersTotalCount: 0
+    usersTotalCount: 0,
+
+    pageList:[],
+    pageTotalCount:0,
   }),
   actions: {
-    postUsersListAction() {
-      // const usersListResult = await pustUserListData()
+    async postUsersListAction(queryInfo: any) {
+      // const usersListResult = await pustUserListData(queryInfo)
       this.usersList = userList.data.list
       this.usersTotalCount = userList.data.totalCount
+    },
+    async deleteUserByIdAction(id:number){
+      // 删除数据
+      const deleteResult = await deleteUserById(id)
+      console.log(deleteResult)
+
+      // 重新请求新的数据
+      this.postUsersListAction({offset:0,size:10})
+    },
+    async newUserDataAction(userInfo:any){
+      const newResult = await newUserData(userInfo)
+      console.log(newResult)
+      this.postUsersListAction({offset:0,size:10})
+    },
+    async editUserDataAction(id:number,userInfo:any){
+      const editResult = await editUserData(id,userInfo)
+      console.log(editResult)
+
+
+      // 重新请求新的数据
+      this.postUsersListAction({offset:0,size:10})
+    },
+    // 针对页面的数据：增删改查
+    async postPageListAction(pageName:string,queryInfo:any){
+      const pageListResult = await postPageListData(pageName,queryInfo)
+      const {totalCount,list} = pageListResult.data
+
+      this.pageList = list;
+      this.pageTotalCount =totalCount
+    },
+    async deletePageByIdAction(pageName:string,id:number){
+      const deleteResult = await deletePageById(pageName,id)
+      console.log(deleteResult)
+      this.postPageListAction(pageName,{offset:0,size:10})
+    },
+    async newPageDataAction(pageName:string,pageInfo:any){
+      const newResult = await newPageData(pageName,pageInfo)
+      console.log(newResult)
+      this.postPageListAction(pageName,{offset:0,size:10})
+    },
+    async editPageDataAction(pageName:string,id:number,pageInfo:any){
+      const editResult = await editPageData(pageName,id,pageInfo)
+      console.log(editResult)
+      this.postPageListAction(pageName,{offset:0,size:10})
     }
   }
 })
