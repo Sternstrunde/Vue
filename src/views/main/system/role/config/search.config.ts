@@ -1,4 +1,5 @@
 const searchConfig = {
+  labelWidth: '200px',
   formItem:[
     {
       type:'input',

@@ -1,23 +1,30 @@
 <template>
   <div class="search">
-    <el-form :model="searchFrom" ref="formRef" label-width="8 0px" size="large">
+    <el-form :model="searchFrom" ref="formRef" label-width="80px" size="large">
       <el-row :gutter="20">
         <template v-for="item in searchConfig.formItem" :key="item.prop">
           <el-col :span="8">
             <el-form-item :label="item.label" :prop="item.prop">
               <!-- <component :is="`el-${item.type}`"></component> -->
               <template v-if="item.type === 'input'">
-                <el-input v-model="searchConfig[item.prop]" :placeholder="item.placeholder"></el-input>
+                <el-input v-model="searchFrom[item.prop]" :placeholder="item.placeholder"></el-input>
               </template>
               <template v-if="item.type === 'date-picker'">
                 <el-date-picker
-                v-model="searchConfig[item.prop]"
+                v-model="searchFrom[item.prop]"
                 type="daterange"
                 range-separator="-"
                 start-placeholder="开始时间"
                 end-placeholder="结束时间"
                 size="large"
               />
+              </template>
+              <template v-if="item.type === 'select'">
+                <el-select v-model="searchFrom[item.prop]" :placeholder="item.placeholder" >
+                  <template v-for="option in item.options" :key="option.value">
+                    <el-option :label="option.label" :value="option.value" style="width: 100%;"></el-option>
+                  </template>
+                </el-select>
               </template>
             </el-form-item>
           </el-col>
