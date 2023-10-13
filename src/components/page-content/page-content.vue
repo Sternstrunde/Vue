@@ -67,6 +67,7 @@ import { formatUTC } from '@/utils/fotamt'
 
 interface IProps {
   contentConfig:{
+    pageName:string,
     header?:{
       title?: string,
       btnTitle?: string
@@ -112,7 +113,7 @@ function fetchPageListData(formData: any = {}) {
   const queryInro = {...info,...formData}
   console.log(queryInro)
 
-  systemStore.postPageListAction('department',queryInro)
+  systemStore.postPageListAction(prop.contentConfig.pageName,queryInro)
 }
 
 defineExpose({ fetchPageListData, handleNewUserClick })
@@ -120,7 +121,7 @@ defineExpose({ fetchPageListData, handleNewUserClick })
 // 删除
 function handleDeleteBtnClick(id:number){
   console.log(id)
-  systemStore.deletePageByIdAction('department',id)
+  systemStore.deletePageByIdAction(prop.contentConfig.pageName,id)
 }
 
 
