@@ -1,4 +1,8 @@
-const modalConfig = {
+import type { IModalConfig } from "@/components/page-modal/type"
+
+
+const modalConfig:IModalConfig = {
+  pageName:'department',
   header:{
     newTitle:'新建部门',
     editTitle: '编辑部门',

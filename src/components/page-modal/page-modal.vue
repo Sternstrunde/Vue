@@ -26,6 +26,9 @@
                   </template>
                 </el-select>
               </template>
+              <template v-if="item.type === 'custom'">
+                <slot :name="item.slotName"></slot>
+              </template>
             </el-form-item>
         </template>
         <!-- <el-form-item label="部门名称" prop="name">
@@ -62,8 +65,20 @@ import { ref, reactive } from 'vue';
 // import userMainStore from '@/store/main/main';
 // import { storeToRefs } from 'pinia';
 import userSystemStore from '@/store/main/system/system';
+import type {IModalProps} from './type'
 
-const prop = defineProps<IProps>()
+interface IProps {
+  modalConfig: {
+    pageName:string,
+    header:{
+      newTitle:string,
+      editTitle:string
+    },
+    formItems:any[]
+  }
+
+}
+const prop = defineProps<IModalProps>()
 const centerDialogVisible = ref(false)
 const initialData:any = {}
 for(const item of prop.modalConfig.formItems){
@@ -73,16 +88,7 @@ for(const item of prop.modalConfig.formItems){
 const formData = reactive<any>(initialData)
 const isNewRef = ref(true)
 const editData = ref()
-interface IProps {
-  modalConfig: {
-    header:{
-      newTitle:string,
-      editTitle:string
-    },
-    formItems:any[]
-  }
 
-}
 
 
 const systemStore = userSystemStore()
@@ -112,11 +118,11 @@ function handleConfirmClick(){
 
  if(!isNewRef.value && editData.value){
    // 编辑部门
-   systemStore.editPageDataAction('department',editData.value.id,formData)
+   systemStore.editPageDataAction(prop.modalConfig.pageName,editData.value.id,formData)
 
  }else{
   // 新建部门
-  systemStore.newPageDataAction('department', formData)
+  systemStore.newPageDataAction(prop.modalConfig.pageName, formData)
  }
 }
 

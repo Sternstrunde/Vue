@@ -1,7 +1,16 @@
 <template>
   <div class="department">
-    <PageSearch :search-config="searchConfig" @query-click="handleQueryClick" @reset-click="handleResetClick" />
-    <PageContent :content-config="contentConfig" ref="contentRef" @new-click="handleNewClick" @edit-click="handleEditClick" >
+    <PageSearch
+      :search-config="searchConfig"
+      @query-click="handleQueryClick"
+      @reset-click="handleResetClick"
+    />
+    <PageContent
+      :content-config="contentConfig"
+      ref="contentRef"
+      @new-click="handleNewClick"
+      @edit-click="handleEditClick"
+    >
       <template #leader="scope">ws1111:{{ scope.row[scope.prop] }}</template>
       <template #parent="scope">22222:{{ scope.row[scope.prop] }}</template>
     </PageContent>
@@ -19,6 +28,8 @@ import contentConfig from './config/content.config'
 import modalConfig from './config/modal.config'
 import { computed } from 'vue'
 import userMainStore from '@/store/main/main'
+import usePageContent from '@/hooks/usePageContent'
+import usePageModal from '@/hooks/usePageModal'
 
 const modalConfigRef = computed(()=>{
   const mainStore = userMainStore();
@@ -35,23 +46,10 @@ const modalConfigRef = computed(()=>{
 
 
 // 点击search，content的操作
-const contentRef = ref<InstanceType<typeof PageContent>>()
-function handleQueryClick(queryInfo:any){
-  contentRef.value?.fetchPageListData(queryInfo)
-}
-function handleResetClick(){
-  contentRef.value?.fetchPageListData()
-}
+const {contentRef,handleQueryClick,handleResetClick}  = usePageContent()
 
-const modalRef = ref<InstanceType<typeof PageModal>>();
+const {modalRef,handleEditClick,handleNewClick} = usePageModal()
 
-function handleNewClick(){
-  modalRef.value?.setModalVisible()
-}
-
-function handleEditClick(itemData:any){
-  modalRef.value?.setModalVisible(false,itemData)
-}
 </script>
 
 <style scoped></style>

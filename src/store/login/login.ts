@@ -146,10 +146,7 @@ const useLoginStore = defineStore('login', {
 
         // 请求所有的roles/department数据
 
-
         routes.forEach((route) => router.addRoute('main', route))
-
-
 
       }
     }

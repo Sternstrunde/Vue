@@ -10,7 +10,7 @@
           {{ item.name }}
         </li>
       </ul> -->
-      <el-table :data="pageList" border style="width: 100%">
+      <el-table :data="pageList" border style="width: 100%" v-bind="contentConfig.childrenTree">
         <template v-for="item in contentConfig.propList" :key="item.prop">
           <template v-if="item.type === 'timer'">
             <el-table-column align="center" v-bind="item" >
@@ -19,8 +19,8 @@
               </template>
             </el-table-column>
           </template>
-          <template v-else-if="item.type === 'handler'">
-            <el-table-column v-bind="item">
+          <template v-else-if="item.type === 'handler'" align="center">
+            <el-table-column v-bind="item" align="center">
               <template #default="scope">
                 <el-button type="primary" icon="Edit" size="small" text @click="handleEditBtnClick(scope.row)">
                   编辑
@@ -72,7 +72,8 @@ interface IProps {
       title?: string,
       btnTitle?: string
     },
-    propList: any[]
+    propList: any[],
+    childrenTree?: any
   }
 }
 
