@@ -28,3 +28,11 @@ export function editUserData(id:number,userInfo:any){
     data:userInfo
   })
 }
+
+
+
+export function getEntireMenus(){
+  return hyRequest.post({
+    url:'/menu/list',
+  })
+}

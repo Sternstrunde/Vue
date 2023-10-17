@@ -75,7 +75,8 @@ interface IProps {
       editTitle:string
     },
     formItems:any[]
-  }
+  },
+  otherInfo?: any
 
 }
 const prop = defineProps<IModalProps>()
@@ -98,6 +99,7 @@ const systemStore = userSystemStore()
 // 定义设置centerDialogVisible 方法
 function setModalVisible(isNew:boolean = true,itemdata?:any){
   centerDialogVisible.value = true
+
   isNewRef.value = isNew
   if(!isNew && itemdata){ // 编辑数据
     for(const key in formData){
@@ -116,6 +118,11 @@ function setModalVisible(isNew:boolean = true,itemdata?:any){
 function handleConfirmClick(){
   centerDialogVisible.value = false
 
+  let infoData = {...formData}
+  if(prop.otherInfo){
+    infoData = {...infoData, ...prop.otherInfo}
+  }
+
  if(!isNewRef.value && editData.value){
    // 编辑部门
    systemStore.editPageDataAction(prop.modalConfig.pageName,editData.value.id,formData)
@@ -128,6 +135,8 @@ function handleConfirmClick(){
 
 // 暴露属性和方法
 defineExpose({setModalVisible})
+
+
 
 </script>
 

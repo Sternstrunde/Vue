@@ -15,5 +15,6 @@ export interface IModalProps {
       editTitle:string
     }
     formItems: any[]
-  }
+  },
+  otherInfo: any
 }
