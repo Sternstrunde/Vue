@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { accountLoginRequest, getUserInfoById } from '@/service/login/login'
 import { localCache } from '@/utils/cache'
 import router from '@/router'
-import { mapMenusToRoutes } from '@/utils/map-menus'
+import { mapMenuListToPermissions, mapMenusToRoutes } from '@/utils/map-menus'
 import { ElMessage } from 'element-plus'
 import type { RouteRecordRaw } from 'vue-router'
 import user from '@/router/main/system/user/user'
@@ -11,14 +11,16 @@ import userMainStore from '../main/main'
 interface IloginState {
   token: string
   userInfo: any
-  userMenus: any
+  userMenus: any,
+  permissions: any[]
 }
 
 const useLoginStore = defineStore('login', {
   state: (): IloginState => ({
     token: '',
     userInfo: {},
-    userMenus: []
+    userMenus: [],
+    permissions:[]
   }),
   actions: {
     async loginAccountAction(account: any) {
@@ -125,6 +127,8 @@ const useLoginStore = defineStore('login', {
         // const mainStore = userMainStore()
         // mainStore.fetchEntireDataAction()
 
+        const permissions = mapMenuListToPermissions(userMenus)
+        this.permissions = permissions
 
 
         mapMenusToRoutes(this.userMenus)
@@ -143,6 +147,9 @@ const useLoginStore = defineStore('login', {
         this.userInfo = userInfo
         this.userMenus = userMenus
         const routes = mapMenusToRoutes(userMenus)
+
+        const permissions = mapMenuListToPermissions(userMenus)
+        this.permissions = permissions
 
         // 请求所有的roles/department数据
 

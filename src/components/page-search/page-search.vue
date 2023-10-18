@@ -1,5 +1,5 @@
 <template>
-  <div class="search">
+  <div class="search" v-if="isQuery">
     <el-form :model="searchFrom" ref="formRef" label-width="80px" size="large">
       <el-row :gutter="20">
         <template v-for="item in searchConfig.formItem" :key="item.prop">
@@ -50,9 +50,11 @@
 <script setup lang="ts">
 import type { ElForm } from 'element-plus'
 import { reactive, ref } from 'vue'
+import usePermissions from '@/hooks/usePermissions';
 
 interface IProps {
   searchConfig:{
+    pageName:string
     formItem:any[]
   }
 }
@@ -61,6 +63,8 @@ interface IProps {
 const emit = defineEmits(['queryClick', 'resetClick'])
 
 const props = defineProps<IProps>()
+
+const isQuery = usePermissions(`${props.searchConfig.pageName}:query`)
 
 const initialForm: any={}
 for(const item of props.searchConfig.formItem){

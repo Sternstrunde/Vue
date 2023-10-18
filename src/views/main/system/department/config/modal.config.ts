@@ -29,7 +29,6 @@ const modalConfig:IModalConfig = {
 
       ]
     },
-
   ]
 }
 

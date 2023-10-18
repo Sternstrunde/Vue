@@ -2,7 +2,7 @@
   <div class="content">
     <div class="header">
       <h3 class="title">{{ contentConfig?.header?.title ?? '数据列表' }}</h3>
-      <el-button type="primary" @click="handleNewUserClick">{{ contentConfig.header?.btnTitle ?? '新建数据' }}</el-button>
+      <el-button type="primary" v-if="isCreate" @click="handleNewUserClick">{{ contentConfig.header?.btnTitle ?? '新建数据' }}</el-button>
     </div>
     <div class="table">
       <!-- <ul>
@@ -22,10 +22,10 @@
           <template v-else-if="item.type === 'handler'" align="center">
             <el-table-column v-bind="item" align="center">
               <template #default="scope">
-                <el-button type="primary" icon="Edit" size="small" text @click="handleEditBtnClick(scope.row)">
+                <el-button v-if="isUpdate" type="primary" icon="Edit" size="small" text @click="handleEditBtnClick(scope.row)">
                   编辑
                 </el-button>
-                <el-button type="danger" icon="Delete" size="small" text @click="handleDeleteBtnClick(scope.row.id)">
+                <el-button v-if="isDelete" type="danger" icon="Delete" size="small" text @click="handleDeleteBtnClick(scope.row.id)">
                   删除
                 </el-button>
               </template>
@@ -63,7 +63,8 @@ import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import userSystemStore from '@/store/main/system/system'
 import { formatUTC } from '@/utils/fotamt'
-
+import useLoginStore from '../../store/login/login';
+import usePermissions from '@/hooks/usePermissions'
 
 interface IProps {
   contentConfig:{
@@ -78,11 +79,20 @@ interface IProps {
 }
 
 
+
 // 定义事件
 const emit = defineEmits(['newClick','editClick'])
 
 const prop = defineProps<IProps>();
 console.log(prop)
+
+
+// 获取是否有对应的增删改查的权限
+const isCreate = usePermissions(`${prop.contentConfig.pageName}:create`)
+const isDelete = usePermissions(`${prop.contentConfig.pageName}:delete`)
+const isUpdate = usePermissions(`${prop.contentConfig.pageName}:update`)
+const isQuery = usePermissions(`${prop.contentConfig.pageName}:query`)
+
 
 // 发送action 请求usersList
 const systemStore = userSystemStore()
@@ -106,6 +116,9 @@ function handleCurrentChange() {
 }
 // 用于发送网络请求
 function fetchPageListData(formData: any = {}) {
+
+  if(!isQuery) return
+
   const size = pageSize.value
   const offest = (currentPage.value - 1) * size
 

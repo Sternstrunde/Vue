@@ -106,3 +106,25 @@ export function mapMenuListToIds(menuList:any){
 
   return ids
 }
+
+/**
+ * 返回权限的数组（字符串数组）
+ *
+ */
+export function mapMenuListToPermissions(userMenus:any){
+  const permissions:string[] = []
+
+  function recurseetPermission(menus:any[]){
+    for(const item of menus){
+      if(item.type === 3){
+        permissions.push(item.permission)
+      }else{
+        recurseetPermission(item.children ?? [])
+      }
+    }
+  }
+
+  recurseetPermission(userMenus)
+
+  return permissions
+}

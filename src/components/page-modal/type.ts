@@ -16,5 +16,5 @@ export interface IModalProps {
     }
     formItems: any[]
   },
-  otherInfo: any
+  otherInfo?: any
 }
