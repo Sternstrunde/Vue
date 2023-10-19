@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import {newUserData, editUserData } from '@/service/main/mian'
 
 import type { ISystemState } from './type'
+import userMainStore from '@/store/main/main';
 
 let userList = {
   code: 0,
@@ -183,9 +184,16 @@ const userSystemStore = defineStore('system', {
       this.postPageListAction(pageName,{offset:0,size:10})
     },
     async newPageDataAction(pageName:string,pageInfo:any){
-      const newResult = await newPageData(pageName,pageInfo)
-      console.log(newResult)
-      this.postPageListAction(pageName,{offset:0,size:10})
+      try {
+        const newResult = await newPageData(pageName,pageInfo)
+        console.log(newResult)
+        this.postPageListAction(pageName,{offset:0,size:10})
+        const mainStore = userMainStore()
+        mainStore.fetchEntireDataAction()
+      } catch (error) {
+
+      }
+
     },
     async editPageDataAction(pageName:string,id:number,pageInfo:any){
       const editResult = await editPageData(pageName,id,pageInfo)

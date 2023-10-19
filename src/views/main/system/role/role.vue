@@ -48,7 +48,7 @@ import {mapMenuListToIds} from '@/utils/map-menus'
 
 const {contentRef,handleQueryClick,handleResetClick}  = usePageContent()
 
-const {modalRef,handleEditClick,handleNewClick} = usePageModal(editCallback)
+const {modalRef,handleEditClick,handleNewClick} = usePageModal(newCallback,editCallback)
 
 const mainStore = userMainStore()
 
@@ -62,6 +62,12 @@ function handleElTreeCheck(data1:any,data2:any){
   const menuList = [...data2.checkdKeys, ...data2.halfCheckedKeys]
 
   otherInfo.value = {menuList}
+}
+
+function newCallback(){
+  nextTick(()=>{
+    treeRef.value?.setCheckedKeys([])
+  })
 }
 
 function editCallback(itemData:any){

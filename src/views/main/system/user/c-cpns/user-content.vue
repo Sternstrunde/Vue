@@ -2,7 +2,7 @@
   <div class="content">
     <div class="header">
       <h3 class="title">用户列表</h3>
-      <el-button type="primary" @click="handleNewUserClick">新建用户</el-button>
+      <el-button type="primary" v-if="isCreate" @click="handleNewUserClick">新建用户</el-button>
     </div>
     <div class="table">
       <!-- <ul>
@@ -60,10 +60,10 @@
 
         <el-table-column label="操作" width="160px">
           <template #default="scope">
-            <el-button type="primary" icon="Edit" size="small" text @click="handleEditBtnClick(scope.row)">
+            <el-button v-if="isUpdate" type="primary" icon="Edit" size="small" text @click="handleEditBtnClick(scope.row)">
               编辑
             </el-button>
-            <el-button type="danger" icon="Delete" size="small" text @click="handleDeleteBtnClick(scope.row.id)">
+            <el-button v-if="isDelete" type="danger" icon="Delete" size="small" text @click="handleDeleteBtnClick(scope.row.id)">
               删除
             </el-button>
           </template>
@@ -89,10 +89,18 @@ import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import userSystemStore from '@/store/main/system/system'
 import { formatUTC } from '@/utils/fotamt'
+import usePermissions from '@/hooks/usePermissions';
 
 
 // 定义事件
 const emit = defineEmits(['newClick','editClick'])
+
+// 用户的权限判断
+const isCreate = usePermissions('users:create')
+const isDelete = usePermissions('users:delete')
+const isUpdate = usePermissions('users:update')
+const isQuery = usePermissions('users:query')
+
 
 // 发送action 请求usersList
 const systemStore = userSystemStore()
@@ -116,6 +124,7 @@ function handleCurrentChange() {
 }
 // 用于发送网络请求
 function fetchUserListData(formData: any = {}) {
+  if(!isQuery) return
   const size = pageSize.value
   const offest = (currentPage.value - 1) * size
 
@@ -126,6 +135,7 @@ function fetchUserListData(formData: any = {}) {
 
   systemStore.postUsersListAction(info)
 }
+
 
 defineExpose({ fetchUserListData, handleNewUserClick })
 

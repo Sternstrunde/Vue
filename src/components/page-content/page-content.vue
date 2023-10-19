@@ -98,6 +98,14 @@ const isQuery = usePermissions(`${prop.contentConfig.pageName}:query`)
 const systemStore = userSystemStore()
 const currentPage = ref(1)
 const pageSize = ref(10)
+// 6.监听sstyemStore中的actions被执行
+systemStore.$onAction(({ name, after })=>{
+  after(()=>{
+    if(name === 'deletePageByIdAction' || name === 'editPageDataAction' || name === 'newPageDataAction'){
+      currentPage.value = 1
+    }
+  })
+})
 fetchPageListData()
 
 // 获取userlist数据，进行展示
@@ -142,6 +150,8 @@ function handleDeleteBtnClick(id:number){
 function handleEditBtnClick(data:any){
   emit('editClick',data)
 }
+
+
 
 
 // 新建用户
