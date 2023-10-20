@@ -7,17 +7,24 @@
       </el-tooltip>
     </div>
     <div class="content">
-      <span class="count">{{number1}}</span>
+      <!-- <span v-if="amout === 'saleroom'">￥</span> -->
+      <span class="count" ref="countRefs">{{number1}}</span>
     </div>
     <div class="footer">
       <span>{{ subtitle }}</span>
-      <span>{{ number1 }}</span>
+      <!-- <span v-if="amout === 'saleroom'">￥</span> -->
+      <span ref="count2Ref">{{ number2 }}</span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import {CountUp} from 'countup.js'
+import { ref, onMounted } from 'vue';
+
+
 interface IProps{
+  amout?:string,
   title?: string,
   tips?: string,
   number1?: number,
@@ -25,13 +32,30 @@ interface IProps{
   subtitle?: string,
 }
 
-withDefaults(defineProps<IProps>(),{
+const props = withDefaults(defineProps<IProps>(),{
+  amout:'saleroom',
   title:'商品总销量',
   tips: '所有的商品总销量',
   number1: 509989,
   number2: 509989,
   subtitle: '商品总销量'
 })
+
+//  创建countUP的实例对象
+// 参数一： 执行动画的元素
+// 参数二： 数字增加 10000
+const countRefs = ref<HTMLElement>()
+const count2Ref = ref<HTMLElement>()
+const countOption = {
+  prefix: props.amout === 'saleroom' ? "￥" : ''
+}
+onMounted(()=>{
+  const countup1 = new CountUp(countRefs.value!,props.number1,countOption)
+  const countup2 = new CountUp(count2Ref.value!,props.number2,countOption)
+  countup1.start()
+  countup2.start()
+})
+
 </script>
 
 <style scoped lang="less">
@@ -48,6 +72,7 @@ withDefaults(defineProps<IProps>(),{
     font-size: 14px;
     color: rgba(0,0,0,0.45);
     justify-content: space-between;
+
     align-items: flex-end;
   }
   .content{
